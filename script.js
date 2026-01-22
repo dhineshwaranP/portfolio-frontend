@@ -1,52 +1,6 @@
-// ===== BACKEND API URL CONFIGURATION =====
-// Choose ONE of these options:
-
-// OPTION 1: Simple Railway URL (replace with your actual URL)
-const BACKEND_URL = 'https://portfolio-backened-production.up.railway.app/api/contact/send';
-
-// OPTION 2: Auto-detection (recommended)
-/*
-const isProduction = window.location.hostname.includes('github.io');
-const BACKEND_URL = isProduction 
-    ? 'https://portfolio-backened-production.up.railway.app/api/contact/send'
-    : 'http://localhost:3000/api/contact/send';
-*/
-
-// OPTION 3: With health check and fallback
-/*
-async function getWorkingBackendUrl() {
-    const urls = [
-        'https://portfolio-backened-production.up.railway.app',
-        'https://portfolio-backened.up.railway.app',
-        'https://portfolio-backened-dqle.onrender.com'
-    ];
-    
-    for (const url of urls) {
-        try {
-            const response = await fetch(`${url}/api/health`, { 
-                method: 'GET',
-                timeout: 3000 
-            });
-            if (response.ok) {
-                console.log(`✅ Using backend: ${url}`);
-                return `${url}/api/contact/send`;
-            }
-        } catch (error) {
-            console.log(`❌ Backend ${url} not available`);
-        }
-    }
-    
-    console.warn('⚠️ No backend available, using fallback');
-    return 'https://portfolio-backened-production.up.railway.app/api/contact/send';
-}
-
-// Initialize backend URL
-let BACKEND_URL;
-getWorkingBackendUrl().then(url => {
-    BACKEND_URL = url;
-    console.log('Backend URL set to:', BACKEND_URL);
-});
-*/
+// ===== BACKEND API URL =====
+// YOUR EXACT RAILWAY URL - DO NOT CHANGE THIS
+const BACKEND_URL = 'https://portfolio-backened-production-26be.up.railway.app/api/contact/send';
 
 // ===== DOM Elements =====
 const themeSwitcher = document.getElementById('theme-switcher');
@@ -68,6 +22,30 @@ const contactName = document.getElementById('contact-name');
 const contactEmail = document.getElementById('contact-email');
 const contactMessage = document.getElementById('contact-message');
 const contactSubmit = document.getElementById('contact-submit');
+
+// ===== Initialize Connection Test =====
+console.log('🚀 Portfolio Frontend Initialized');
+console.log('🎯 Backend URL:', BACKEND_URL);
+console.log('🌐 Frontend Host:', window.location.hostname);
+
+// Test backend connection on load
+window.addEventListener('load', async () => {
+    try {
+        const healthUrl = BACKEND_URL.replace('/api/contact/send', '/api/health');
+        const response = await fetch(healthUrl, { timeout: 5000 });
+        const data = await response.json();
+        console.log('✅ Backend Connection Test:', data);
+        
+        if (data.resendConfigured) {
+            console.log('📧 Email service: READY');
+        } else {
+            console.warn('⚠️ Email service: RESEND_API_KEY not configured');
+        }
+    } catch (error) {
+        console.warn('⚠️ Backend connection test failed:', error.message);
+        console.log('💡 Check: 1. Railway URL  2. CORS settings  3. Backend deployment');
+    }
+});
 
 // ===== Typing Animation =====
 const typingStrings = [
@@ -200,7 +178,7 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     });
 });
 
-// ===== Contact Form Handler =====
+// ===== ENHANCED Contact Form Handler =====
 if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -217,40 +195,103 @@ if (contactForm) {
             message: contactMessage.value.trim()
         };
         
-        // Basic validation
-        if (!formData.name || !formData.email || !formData.message) {
-            showNotification('Please fill in all fields', 'error', 3000);
-            contactSubmit.innerHTML = originalText;
-            contactSubmit.disabled = false;
+        console.log('📤 Form Submission:', {
+            data: formData,
+            url: BACKEND_URL,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Enhanced Validation
+        if (!formData.name || formData.name.length < 2) {
+            showNotification('Name must be at least 2 characters', 'error', 3000);
+            resetButton(originalText);
+            return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formData.email || !emailRegex.test(formData.email)) {
+            showNotification('Please enter a valid email address', 'error', 3000);
+            resetButton(originalText);
+            return;
+        }
+        
+        if (!formData.message || formData.message.length < 10) {
+            showNotification('Message must be at least 10 characters', 'error', 3000);
+            resetButton(originalText);
             return;
         }
         
         try {
-            console.log('Sending to:', BACKEND_URL);
-            console.log('Data:', formData);
+            console.log('🚀 Sending request to backend...');
+            
+            // Add timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
             
             const response = await fetch(BACKEND_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                signal: controller.signal,
+                mode: 'cors'
             });
             
-            const data = await response.json();
-            console.log('Response:', data);
+            clearTimeout(timeoutId);
             
-            if (data.success) {
-                showNotification(data.message || 'Message sent successfully!', 'success', 5000);
-                contactForm.reset();
-            } else {
-                showNotification(data.message || data.error || 'Failed to send message', 'error', 4000);
+            console.log('📥 Response Status:', response.status, response.statusText);
+            
+            // Handle non-JSON responses
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('❌ Non-JSON response:', text);
+                throw new Error('Server returned non-JSON response');
             }
+            
+            const data = await response.json();
+            console.log('✅ Backend Response:', data);
+            
+            if (response.ok && data.success) {
+                showNotification('🎉 ' + (data.message || 'Message sent successfully!'), 'success', 5000);
+                contactForm.reset();
+                
+                // Clear floating labels
+                contactName.value = '';
+                contactEmail.value = '';
+                contactMessage.value = '';
+            } else {
+                showNotification('❌ ' + (data.message || data.error || 'Failed to send message'), 'error', 4000);
+            }
+            
         } catch (error) {
-            console.error('Fetch error:', error);
-            showNotification('Network error. Please try again later.', 'error', 4000);
+            console.error('❌ Form Submission Error:', {
+                name: error.name,
+                message: error.message,
+                url: BACKEND_URL
+            });
+            
+            // Specific error messages
+            if (error.name === 'AbortError') {
+                showNotification('⏰ Request timeout. Please try again.', 'error', 4000);
+            } else if (error.message.includes('Failed to fetch')) {
+                showNotification('🌐 Cannot connect to server. Check your internet connection.', 'error', 4000);
+            } else if (error.message.includes('CORS')) {
+                showNotification('🔒 CORS error. Please contact website administrator.', 'error', 5000);
+            } else if (error.message.includes('NetworkError')) {
+                showNotification('📡 Network error. Please check your connection.', 'error', 4000);
+            } else {
+                showNotification('❌ ' + error.message, 'error', 4000);
+            }
+            
         } finally {
-            contactSubmit.innerHTML = originalText;
+            resetButton(originalText);
+        }
+        
+        function resetButton(text) {
+            contactSubmit.innerHTML = text;
             contactSubmit.disabled = false;
         }
     });
@@ -277,11 +318,12 @@ function enhanceSocialLinks() {
     
     document.querySelectorAll('.social-icon, .social-link, .footer-social a').forEach(icon => {
         icon.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.1)';
+            this.style.transform = 'translateY(-3px) scale(1.1)';
+            this.style.transition = 'transform 0.3s ease';
         });
         
         icon.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)';
+            this.style.transform = 'translateY(0) scale(1)';
         });
     });
 }
@@ -297,9 +339,21 @@ function showNotification(message, type = 'info', duration = 3000) {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
+    
+    // Icons for different notification types
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        info: 'info-circle',
+        warning: 'exclamation-triangle'
+    };
+    
     notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <i class="fas fa-${icons[type] || 'info-circle'}"></i>
         <span>${message}</span>
+        <button class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
     `;
     
     // Add styles
@@ -307,17 +361,46 @@ function showNotification(message, type = 'info', duration = 3000) {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        background: ${type === 'success' ? '#10b981' : 
+                     type === 'error' ? '#ef4444' : 
+                     type === 'warning' ? '#f59e0b' : '#3b82f6'};
         color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
+        padding: 15px 20px;
+        border-radius: 10px;
         box-shadow: var(--shadow-lg);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         z-index: 9999;
         animation: slideIn 0.3s ease;
+        min-width: 300px;
+        max-width: 400px;
     `;
+    
+    // Close button styling
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.style.cssText = `
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        margin-left: auto;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    `;
+    
+    closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.opacity = '1';
+    });
+    
+    closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.opacity = '0.7';
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    });
     
     document.body.appendChild(notification);
     
@@ -334,19 +417,27 @@ function showNotification(message, type = 'info', duration = 3000) {
 async function checkBackendHealth() {
     try {
         const baseUrl = BACKEND_URL.replace('/api/contact/send', '/api/health');
-        const response = await fetch(baseUrl, { timeout: 5000 });
+        const response = await fetch(baseUrl, { 
+            timeout: 5000,
+            mode: 'cors'
+        });
+        
         if (response.ok) {
-            console.log('✅ Backend is healthy');
+            const data = await response.json();
+            console.log('✅ Backend Health:', data);
             return true;
         }
+        return false;
     } catch (error) {
         console.warn('⚠️ Backend health check failed:', error.message);
+        return false;
     }
-    return false;
 }
 
 // ===== Initialize Everything =====
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🏁 DOM Loaded - Initializing Portfolio...');
+    
     // Start typing animation
     typeEffect();
     
@@ -364,8 +455,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Resume button
     if (resumeBtn) {
-        resumeBtn.addEventListener('click', () => {
+        resumeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             showNotification('Opening resume...', 'info', 2000);
+            // Add your resume URL here
+            window.open('https://drive.google.com/your-resume-link', '_blank');
         });
     }
     
@@ -380,24 +474,61 @@ document.addEventListener('DOMContentLoaded', function() {
     enhanceSocialLinks();
     
     // Check backend health on load
-    checkBackendHealth();
+    setTimeout(() => {
+        checkBackendHealth().then(isHealthy => {
+            if (!isHealthy) {
+                console.warn('⚠️ Backend appears to be offline or misconfigured');
+                console.log('💡 Check:');
+                console.log('1. Visit:', 'https://portfolio-backened-production-26be.up.railway.app/api/health');
+                console.log('2. Check Railway logs');
+                console.log('3. Verify CORS settings in server.js');
+            }
+        });
+    }, 1000);
     
     // Add animation styles
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from { 
+                transform: translateX(100%); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
         }
         @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+            from { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+            to { 
+                transform: translateX(100%); 
+                opacity: 0; 
+            }
+        }
+        
+        .notification-close:hover {
+            opacity: 1 !important;
+        }
+        
+        /* Loading spinner animation */
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     `;
     document.head.appendChild(style);
     
-    // Log the backend URL being used
-    console.log('🎯 Using Backend URL:', BACKEND_URL);
-    console.log('🌐 Frontend Host:', window.location.hostname);
+    // Log final initialization
+    console.log('✅ Portfolio Frontend Fully Initialized');
+    console.log('📧 Contact Form Ready - URL:', BACKEND_URL);
 });
+
 
