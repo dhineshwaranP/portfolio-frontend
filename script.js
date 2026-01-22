@@ -1,5 +1,52 @@
-// ===== BACKEND API URL =====
-const BACKEND_URL = 'https://portfolio-backened-dqle.onrender.com/api/contact/send';
+// ===== BACKEND API URL CONFIGURATION =====
+// Choose ONE of these options:
+
+// OPTION 1: Simple Railway URL (replace with your actual URL)
+const BACKEND_URL = 'https://portfolio-backened-production.up.railway.app/api/contact/send';
+
+// OPTION 2: Auto-detection (recommended)
+/*
+const isProduction = window.location.hostname.includes('github.io');
+const BACKEND_URL = isProduction 
+    ? 'https://portfolio-backened-production.up.railway.app/api/contact/send'
+    : 'http://localhost:3000/api/contact/send';
+*/
+
+// OPTION 3: With health check and fallback
+/*
+async function getWorkingBackendUrl() {
+    const urls = [
+        'https://portfolio-backened-production.up.railway.app',
+        'https://portfolio-backened.up.railway.app',
+        'https://portfolio-backened-dqle.onrender.com'
+    ];
+    
+    for (const url of urls) {
+        try {
+            const response = await fetch(`${url}/api/health`, { 
+                method: 'GET',
+                timeout: 3000 
+            });
+            if (response.ok) {
+                console.log(`✅ Using backend: ${url}`);
+                return `${url}/api/contact/send`;
+            }
+        } catch (error) {
+            console.log(`❌ Backend ${url} not available`);
+        }
+    }
+    
+    console.warn('⚠️ No backend available, using fallback');
+    return 'https://portfolio-backened-production.up.railway.app/api/contact/send';
+}
+
+// Initialize backend URL
+let BACKEND_URL;
+getWorkingBackendUrl().then(url => {
+    BACKEND_URL = url;
+    console.log('Backend URL set to:', BACKEND_URL);
+});
+*/
 
 // ===== DOM Elements =====
 const themeSwitcher = document.getElementById('theme-switcher');
@@ -159,6 +206,7 @@ if (contactForm) {
         e.preventDefault();
         
         // Show loading state
+        const originalText = contactSubmit.innerHTML;
         contactSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         contactSubmit.disabled = true;
         
@@ -172,12 +220,15 @@ if (contactForm) {
         // Basic validation
         if (!formData.name || !formData.email || !formData.message) {
             showNotification('Please fill in all fields', 'error', 3000);
-            contactSubmit.innerHTML = 'Send Message <i class="fas fa-paper-plane"></i>';
+            contactSubmit.innerHTML = originalText;
             contactSubmit.disabled = false;
             return;
         }
         
         try {
+            console.log('Sending to:', BACKEND_URL);
+            console.log('Data:', formData);
+            
             const response = await fetch(BACKEND_URL, {
                 method: 'POST',
                 headers: {
@@ -187,18 +238,19 @@ if (contactForm) {
             });
             
             const data = await response.json();
+            console.log('Response:', data);
             
-            if (response.ok) {
-                showNotification('Message sent successfully!', 'success', 5000);
+            if (data.success) {
+                showNotification(data.message || 'Message sent successfully!', 'success', 5000);
                 contactForm.reset();
             } else {
-                showNotification(data.error || 'Failed to send message', 'error', 4000);
+                showNotification(data.message || data.error || 'Failed to send message', 'error', 4000);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
             showNotification('Network error. Please try again later.', 'error', 4000);
         } finally {
-            contactSubmit.innerHTML = 'Send Message <i class="fas fa-paper-plane"></i>';
+            contactSubmit.innerHTML = originalText;
             contactSubmit.disabled = false;
         }
     });
@@ -278,6 +330,21 @@ function showNotification(message, type = 'info', duration = 3000) {
     }, duration);
 }
 
+// ===== Backend Health Check =====
+async function checkBackendHealth() {
+    try {
+        const baseUrl = BACKEND_URL.replace('/api/contact/send', '/api/health');
+        const response = await fetch(baseUrl, { timeout: 5000 });
+        if (response.ok) {
+            console.log('✅ Backend is healthy');
+            return true;
+        }
+    } catch (error) {
+        console.warn('⚠️ Backend health check failed:', error.message);
+    }
+    return false;
+}
+
 // ===== Initialize Everything =====
 document.addEventListener('DOMContentLoaded', function() {
     // Start typing animation
@@ -312,6 +379,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhance social links
     enhanceSocialLinks();
     
+    // Check backend health on load
+    checkBackendHealth();
+    
     // Add animation styles
     const style = document.createElement('style');
     style.textContent = `
@@ -325,5 +395,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+    
+    // Log the backend URL being used
+    console.log('🎯 Using Backend URL:', BACKEND_URL);
+    console.log('🌐 Frontend Host:', window.location.hostname);
 });
 
