@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhineshwaran P | Frontend Developer Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="theme-switcher" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#home" class="logo">DP</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#coding">Coding</a></li>
+                <li><a href="#achievements">Achievements</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h4 class="hero-subtitle">Hello, I'm</h4>
+                <h1 class="hero-title">Dhineshwaran P</h1>
+                <div class="typing-container">
+                    <span class="typing-text"></span>
+                    <span class="cursor"></span>
+                </div>
+                <p class="hero-description">A passionate <strong>Frontend Developer</strong> and <strong>Aspiring Full Stack Developer</strong> currently pursuing B.E in Computer Science with 8.76 CGPA. I build responsive, user-friendly web applications.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Problems Solved</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Internships</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8.76</span>
+                        <span class="stat-label">CGPA</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-code"></i>
+                        View Projects
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-paper-plane"></i>
+                        Contact Me
+                    </a>
+                    <a href="#" class="btn btn-outline" id="resume-btn">
+                        <i class="fas fa-download"></i>
+                        Download Resume
+                    </a>
+                </div>
+                
+                <div class="hero-social">
+                    <a href="https://github.com/dhineshwaranP" target="_blank" class="social-icon" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/dhineshwaran-p-050bb3298" target="_blank" class="social-icon" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:apkpdhinesh2005@gmail.com" class="social-icon" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://leetcode.com/u/Dhineshwaran_P/" target="_blank" class="social-icon" title="LeetCode">
+                        <i class="fas fa-code"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="profile-container">
+                    <div class="profile-image">
+                        <div class="image-wrapper">
+                            <div class="profile-pic">
+                                <!-- Profile Picture - Add your image here -->
+                                <div class="profile-avatar">
+                                    <img src="pro.jpeg" alt="Dhineshwaran P" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                </div>
+                                <div class="profile-ring"></div>
+                                <div class="profile-ring ring-2"></div>
+                                <div class="profile-ring ring-3"></div>
+                            </div>
+                        </div>
+                        <div class="profile-status">
+                            <span class="status-dot"></span>
+                            <span>Available for Internship</span>
+                        </div>
+                    </div>
+                    <div class="profile-tech">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JS</span>
+                        <span class="tech-tag">Java</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Objective</h3>
+                    <p>Enthusiastic and proactive undergraduate with a strong academic foundation and a keen interest in Full Stack Development. Skilled in Java, HTML, CSS, JavaScript. A quick learner and effective team player, passionate about contributing to meaningful projects and gaining practical experience in a dynamic environment.</p>
+                    <p>Seeking an internship opportunity to apply my knowledge, develop industry-relevant skills, and deliver impactful results.</p>
+                    
+                    <div class="education-timeline">
+                        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2023 - 2027</div>
+                            <div class="timeline-content">
+                                <h4>B.E Computer Science and Engineering</h4>
+                                <p class="institution">PSNA College of Engineering and Technology, Dindigul</p>
+                                <div class="gpa-badge">CGPA: 8.76/10</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2022 - 2023</div>
+                            <div class="timeline-content">
+                                <h4>Secondary Education</h4>
+                                <p class="institution">Devangar Higher Secondary School, Aruppukkottai</p>
+                                <div class="gpa-badge">Percentage: 88.16%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section skills">
+        <div class="container">
+            <h2 class="section-title">Skills & Tools</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fas fa-code"></i> Programming Languages</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>Java</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>JavaScript</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-laptop-code"></i> Web Technologies</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>HTML5</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="95"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>CSS3</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="90"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-tools"></i> Development Tools</h3>
+                    <div class="tools-grid">
+                        <div class="tool-item">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </div>
+                        <div class="tool-item">
+                            <i class="fas fa-code"></i>
+                            <span>VS Code</span>
+                        </div>
+                        <div class="tool-item">
+                            <i class="fas fa-cogs"></i>
+                            <span>Eclipse</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-timeline">
+                <div class="experience-item">
+                    <div class="experience-date">2024</div>
+                    <div class="experience-content">
+                        <h3>Frontend Developer Intern</h3>
+                        <h4>Innomatics Research Lab</h4>
+                        <ul>
+                            <li>Developed responsive user interfaces using HTML, CSS, and JavaScript as part of real-time client projects</li>
+                            <li>Collaborated with backend team for dynamic content rendering</li>
+                            <li>Implemented modern UI components and followed best practices</li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>HTML</span>
+                            <span>CSS</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="experience-item">
+                    <div class="experience-date">2023</div>
+                    <div class="experience-content">
+                        <h3>Web Development Intern</h3>
+                        <h4>Zidio Development</h4>
+                        <ul>
+                            <li>Developed responsive Excel analytics platform using HTML, CSS, and JavaScript</li>
+                            <li>Worked on real-time client projects with a focus on data visualization</li>
+                            <li>Implemented responsive designs for various screen sizes</li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>HTML</span>
+                            <span>CSS</span>
+                            <span>JavaScript</span>
+                            <span>Excel API</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image coffee-project">
+                        <div class="project-badge">Web Development</div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://dhineshwaranp.github.io/innomaticsAssignment2/" target="_blank" class="project-link-btn">
+                                    <i class="fas fa-eye"></i> Live Demo
+                                </a>
+                                <a href="https://github.com/dhineshwaranP/innomaticsAssignment2" target="_blank" class="project-link-btn">
+                                    <i class="fab fa-github"></i> View Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Coffee Shop Website</h3>
+                        <p>Fully responsive coffee shop website with modern UI design, product showcase, and user-friendly interface. Built with pure HTML, CSS, and JavaScript.</p>
+                        <div class="project-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                            <span>Responsive</span>
+                        </div>
+                        <div class="project-features">
+                            <span><i class="fas fa-check"></i> Mobile Responsive</span>
+                            <span><i class="fas fa-check"></i> Modern UI</span>
+                            <span><i class="fas fa-check"></i> Smooth Animations</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image library-project">
+                        <div class="project-badge">Full Stack</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Library Management System</h3>
+                        <p>A web-based Library Management System to add, update, issue, and manage books easily using modern technologies with Flask backend.</p>
+                        <div class="project-tech">
+                            <span>HTML/CSS/JS</span>
+                            <span>Flask</span>
+                            <span>MySQL</span>
+                            <span>Python</span>
+                        </div>
+                        <div class="project-features">
+                            <span><i class="fas fa-check"></i> Book Management</span>
+                            <span><i class="fas fa-check"></i> User System</span>
+                            <span><i class="fas fa-check"></i> Database</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fas fa-eye"></i> Live Demo
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coding Profiles Section -->
+    <section id="coding" class="section coding">
+        <div class="container">
+            <h2 class="section-title">Coding Profiles</h2>
+            <div class="coding-grid">
+                <div class="coding-card">
+                    <div class="coding-header">
+                        <i class="fas fa-code"></i>
+                        <h3>LeetCode</h3>
+                    </div>
+                    <div class="coding-stats">
+                        <div class="stat">
+                            <span class="stat-value">50+</span>
+                            <span class="stat-label">Problems Solved</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">Active</span>
+                            <span class="stat-label">Weekly Practice</span>
+                        </div>
+                    </div>
+                    <a href="https://leetcode.com/u/Dhineshwaran_P/" target="_blank" class="btn btn-outline">
+                        <i class="fas fa-external-link-alt"></i> View Profile
+                    </a>
+                </div>
+
+                <div class="coding-card">
+                    <div class="coding-header">
+                        <i class="fas fa-medal"></i>
+                        <h3>HackerRank</h3>
+                    </div>
+                    <div class="coding-stats">
+                        <div class="stat">
+                            <span class="stat-value">Silver</span>
+                            <span class="stat-label">Problem Solving</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">20+</span>
+                            <span class="stat-label">Problems Solved</span>
+                        </div>
+                    </div>
+                    <a href="https://www.hackerrank.com/profile/apkpdhineshwaran" target="_blank" class="btn btn-outline">
+                        <i class="fas fa-external-link-alt"></i> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="section achievements">
+        <div class="container">
+            <h2 class="section-title">Achievements</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>First Prize - ASTA'25</h3>
+                    <p class="achievement-date">National Level Technical Symposium 2025</p>
+                    <p>Won First Prize at ASTA'25 organized by Selvam College of Technology; enhanced teamwork, problem-solving, and technical presentation skills.</p>
+                    <div class="achievement-tags">
+                        <span>National Level</span>
+                        <span>First Prize</span>
+                        <span>Technical Symposium</span>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>SIH 2025 Hackathon</h3>
+                    <p class="achievement-date">Smart India Hackathon 2025</p>
+                    <p>Participated in SIH 2025 Intra-Department Hackathon at PSNACET, focusing on innovative solution design and teamwork.</p>
+                    <div class="achievement-tags">
+                        <span>SIH 2025</span>
+                        <span>Hackathon</span>
+                        <span>Innovation</span>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>HackerRank Silver Badge</h3>
+                    <p class="achievement-date">Problem Solving</p>
+                    <p>Silver badge holder in Problem Solving on HackerRank with 20+ problems solved, demonstrating strong algorithmic thinking.</p>
+                    <div class="achievement-tags">
+                        <span>Silver Badge</span>
+                        <span>Problem Solving</span>
+                        <span>HackerRank</span>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Paper Presentation</h3>
+                    <p class="achievement-date">PSG Institute of Technology</p>
+                    <p>Presented research paper at PSG Institute of Technology, showcasing technical knowledge and presentation skills in emerging technologies.</p>
+                    <div class="achievement-tags">
+                        <span>Research</span>
+                        <span>Presentation</span>
+                        <span>Technical</span>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Codeathon Participant</h3>
+                    <p class="achievement-date">KPR College, Coimbatore</p>
+                    <p>Participated in Codeathon at KPR College, Coimbatore, enhancing coding skills and competitive programming abilities through team collaboration.</p>
+                    <div class="achievement-tags">
+                        <span>Coding</span>
+                        <span>Competitive</span>
+                        <span>Teamwork</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title">Contact Me</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>I'm open to discussing internship opportunities, collaborations, or just chatting about technology.</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <span>Email</span>
+                                <a href="mailto:apkpdhinesh2005@gmail.com">apkpdhinesh2005@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <span>Location</span>
+                                <span>Dindigul, Tamil Nadu</span>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <span>Education</span>
+                                <span>PSNA College of Engineering and Technology</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-social">
+                        <h4>Connect with me</h4>
+                        <div class="social-links">
+                            <a href="https://github.com/dhineshwaranP" target="_blank" class="social-link">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub</span>
+                            </a>
+                            <a href="https://www.linkedin.com/in/dhineshwaran-p-050bb3298" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="mailto:apkpdhinesh2005@gmail.com" class="social-link">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contact-form">
+                    <h3>Send a Message</h3>
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required id="contact-name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required id="contact-email">
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" rows="5" required id="contact-message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="contact-submit">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Dhineshwaran P</h3>
+                    <p>Frontend Developer | Aspiring Full Stack Developer</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#achievements">Achievements</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/dhineshwaranP" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/dhineshwaran-p-050bb3298" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:apkpdhinesh2005@gmail.com"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; <span id="current-year"></span> Dhineshwaran P. All rights reserved.</p>
+                <p>Made with <i class="fas fa-heart"></i> and <i class="fas fa-code"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
