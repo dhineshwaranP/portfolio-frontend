@@ -1,6 +1,6 @@
 // ===== BACKEND API URL =====
 // YOUR EXACT RAILWAY URL - DO NOT CHANGE THIS
-const BACKEND_URL = 'https://portfolio-backened-production-26be.up.railway.app/api/contact/send';
+const API_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api';
 
 // ===== DOM Elements =====
 const themeSwitcher = document.getElementById('theme-switcher');
@@ -530,5 +530,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Portfolio Frontend Fully Initialized');
     console.log('📧 Contact Form Ready - URL:', BACKEND_URL);
 });
+
 
 
