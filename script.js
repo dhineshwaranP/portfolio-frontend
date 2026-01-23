@@ -1,11 +1,11 @@
 // ===== BACKEND API URL =====
-// YOUR RAILWAY BACKEND URL - UPDATED
+// RAILWAY BACKEND - DO NOT CHANGE THESE URLs
 const BACKEND_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api/contact/send';
 const HEALTH_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api/health';
 
 // ===== DOM Elements =====
 const themeSwitcher = document.getElementById('theme-switcher');
-const themeIcon = themeSwitcher.querySelector('i');
+const themeIcon = themeSwitcher?.querySelector('i');
 const htmlElement = document.documentElement;
 const navbar = document.querySelector('.navbar');
 const navLinks = document.querySelector('.nav-links');
@@ -27,23 +27,45 @@ const contactSubmit = document.getElementById('contact-submit');
 // ===== Initialize Connection Test =====
 console.log('🚀 Portfolio Frontend Initialized');
 console.log('🎯 Backend URL:', BACKEND_URL);
-console.log('🌐 Frontend Host:', window.location.hostname);
+console.log('🌐 Frontend Origin:', window.location.origin);
+console.log('📱 User Agent:', navigator.userAgent);
 
 // Test backend connection on load
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch(HEALTH_URL, { timeout: 5000 });
-        const data = await response.json();
-        console.log('✅ Backend Connection Test:', data);
+        console.log('🔍 Testing Railway backend connection...');
+        const response = await fetch(HEALTH_URL, { 
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         
-        if (data.resendConfigured) {
-            console.log('📧 Email service: READY');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Backend Connection Test:', {
+                status: 'SUCCESS',
+                message: data.message,
+                environment: data.environment,
+                emailConfigured: data.emailConfigured,
+                uptime: data.uptime
+            });
+            
+            // Show connection status in UI
+            if (data.emailConfigured) {
+                console.log('📧 Email service: READY');
+            } else {
+                console.warn('⚠️ Email service: NOT CONFIGURED (messages will be logged only)');
+            }
         } else {
-            console.warn('⚠️ Email service: RESEND_API_KEY not configured');
+            console.warn('⚠️ Backend responded with status:', response.status);
         }
     } catch (error) {
         console.warn('⚠️ Backend connection test failed:', error.message);
-        console.log('💡 Check: 1. Railway URL  2. CORS settings  3. Backend deployment');
+        console.log('💡 Troubleshooting:');
+        console.log('1. Visit:', HEALTH_URL, 'to check if backend is running');
+        console.log('2. Check Railway dashboard for deployment status');
+        console.log('3. Wait 30 seconds for Railway app to wake up');
     }
 });
 
@@ -61,6 +83,8 @@ let isDeleting = false;
 let typingSpeed = 100;
 
 function typeEffect() {
+    if (!typingText) return;
+    
     const currentString = typingStrings[stringIndex];
     
     if (isDeleting) {
@@ -93,6 +117,8 @@ function setTheme(theme) {
 }
 
 function updateThemeIcon(theme) {
+    if (!themeIcon) return;
+    
     if (theme === 'dark') {
         themeIcon.className = 'fas fa-sun';
         themeIcon.style.color = '#FFD700';
@@ -115,31 +141,37 @@ function initTheme() {
     }
 }
 
-themeSwitcher.addEventListener('click', () => {
-    const currentTheme = htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    
-    themeSwitcher.style.transform = 'scale(0.9)';
-    setTimeout(() => {
-        themeSwitcher.style.transform = 'scale(1)';
-    }, 150);
-});
+if (themeSwitcher) {
+    themeSwitcher.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        
+        themeSwitcher.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            themeSwitcher.style.transform = 'scale(1)';
+        }, 150);
+    });
+}
 
 // ===== Scroll Animations =====
 function checkScroll() {
     const scrollPosition = window.scrollY;
     
-    if (scrollPosition > 50) {
-        navbar.style.boxShadow = 'var(--shadow-md)';
-    } else {
-        navbar.style.boxShadow = 'var(--shadow-sm)';
+    if (navbar) {
+        if (scrollPosition > 50) {
+            navbar.style.boxShadow = 'var(--shadow-md)';
+        } else {
+            navbar.style.boxShadow = 'var(--shadow-sm)';
+        }
     }
     
-    if (scrollPosition > 500) {
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.remove('visible');
+    if (backToTop) {
+        if (scrollPosition > 500) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
     }
     
     sections.forEach(section => {
@@ -164,29 +196,28 @@ function animateSkillBars() {
 }
 
 // ===== Mobile Navigation =====
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navLinks.classList.toggle('active');
-    document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
-});
-
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navLinks.classList.remove('active');
-        document.body.style.overflow = 'auto';
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
     });
-});
+}
+
+if (navLinks) {
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    });
+}
 
 // ===== ENHANCED Contact Form Handler =====
-if (contactForm) {
+if (contactForm && contactSubmit) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        // Show loading state
-        const originalText = contactSubmit.innerHTML;
-        contactSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        contactSubmit.disabled = true;
         
         // Get form data
         const formData = {
@@ -197,36 +228,43 @@ if (contactForm) {
         
         console.log('📤 Form Submission:', {
             data: formData,
-            url: BACKEND_URL,
-            timestamp: new Date().toISOString()
+            backend: BACKEND_URL,
+            timestamp: new Date().toISOString(),
+            origin: window.location.origin
         });
         
         // Enhanced Validation
+        const validationErrors = [];
+        
         if (!formData.name || formData.name.length < 2) {
-            showNotification('Name must be at least 2 characters', 'error', 3000);
-            resetButton(originalText);
-            return;
+            validationErrors.push('Name must be at least 2 characters');
         }
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!formData.email || !emailRegex.test(formData.email)) {
-            showNotification('Please enter a valid email address', 'error', 3000);
-            resetButton(originalText);
-            return;
+            validationErrors.push('Please enter a valid email address');
         }
         
         if (!formData.message || formData.message.length < 10) {
-            showNotification('Message must be at least 10 characters', 'error', 3000);
-            resetButton(originalText);
+            validationErrors.push('Message must be at least 10 characters');
+        }
+        
+        if (validationErrors.length > 0) {
+            showNotification(validationErrors[0], 'error', 3000);
             return;
         }
         
+        // Show loading state
+        const originalText = contactSubmit.innerHTML;
+        contactSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        contactSubmit.disabled = true;
+        
         try {
-            console.log('🚀 Sending request to backend...');
+            console.log('🚀 Sending request to Railway backend...');
             
-            // Add timeout to prevent hanging
+            // Create AbortController for timeout
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
             
             const response = await fetch(BACKEND_URL, {
                 method: 'POST',
@@ -235,96 +273,97 @@ if (contactForm) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify(formData),
-                signal: controller.signal,
-                mode: 'cors'
+                signal: controller.signal
+                // Note: Don't set mode: 'cors' explicitly, let browser handle it
             });
             
             clearTimeout(timeoutId);
             
             console.log('📥 Response Status:', response.status, response.statusText);
             
-            // Handle non-JSON responses
+            // Log response headers for debugging
+            console.log('📥 Response Headers:', {
+                'content-type': response.headers.get('content-type'),
+                'access-control-allow-origin': response.headers.get('access-control-allow-origin')
+            });
+            
+            // Handle response
             const contentType = response.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
                 const text = await response.text();
-                console.error('❌ Non-JSON response:', text);
-                throw new Error('Server returned non-JSON response');
-            }
-            
-            const data = await response.json();
-            console.log('✅ Backend Response:', data);
-            
-            if (response.ok && data.success) {
-                showNotification('🎉 ' + (data.message || 'Message sent successfully!'), 'success', 5000);
-                contactForm.reset();
+                console.warn('⚠️ Non-JSON response received:', text.substring(0, 200));
                 
-                // Clear floating labels
-                contactName.value = '';
-                contactEmail.value = '';
-                contactMessage.value = '';
+                if (response.ok) {
+                    // If it's a 200 with non-JSON, assume success
+                    showNotification('Message sent successfully!', 'success', 5000);
+                    contactForm.reset();
+                } else {
+                    throw new Error(`Server error: ${response.status}`);
+                }
             } else {
-                showNotification('❌ ' + (data.message || data.error || 'Failed to send message'), 'error', 4000);
+                const data = await response.json();
+                console.log('✅ Backend Response:', data);
+                
+                if (response.ok && data.success) {
+                    showNotification('🎉 ' + data.message, 'success', 5000);
+                    contactForm.reset();
+                    
+                    // Clear form fields
+                    if (contactName) contactName.value = '';
+                    if (contactEmail) contactEmail.value = '';
+                    if (contactMessage) contactMessage.value = '';
+                } else {
+                    showNotification('❌ ' + (data.message || 'Failed to send message'), 'error', 4000);
+                    
+                    // Show validation errors if any
+                    if (data.errors && Array.isArray(data.errors)) {
+                        console.error('Validation errors:', data.errors);
+                    }
+                }
             }
             
         } catch (error) {
             console.error('❌ Form Submission Error:', {
                 name: error.name,
                 message: error.message,
-                url: BACKEND_URL
+                type: error.type,
+                url: BACKEND_URL,
+                timestamp: new Date().toISOString()
             });
             
-            // Specific error messages
+            // User-friendly error messages
+            let userMessage = 'Failed to send message. ';
+            
             if (error.name === 'AbortError') {
-                showNotification('⏰ Request timeout. Please try again.', 'error', 4000);
-            } else if (error.message.includes('Failed to fetch')) {
-                showNotification('🌐 Cannot connect to server. Check your internet connection.', 'error', 4000);
+                userMessage += 'Request timeout. The server is taking too long to respond.';
+            } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                userMessage += 'Cannot connect to server. ';
+                userMessage += 'Possible issues:\n';
+                userMessage += '• Railway app might be sleeping\n';
+                userMessage += '• Check your internet connection\n';
+                userMessage += '• Try again in 30 seconds';
             } else if (error.message.includes('CORS')) {
-                showNotification('🔒 CORS error. Please contact website administrator.', 'error', 5000);
-            } else if (error.message.includes('NetworkError')) {
-                showNotification('📡 Network error. Please check your connection.', 'error', 4000);
+                userMessage += 'Cross-origin request blocked. ';
+                userMessage += 'Please contact the website administrator.';
             } else {
-                showNotification('❌ ' + error.message, 'error', 4000);
+                userMessage += error.message;
             }
+            
+            showNotification(userMessage, 'error', 6000);
+            
+            // Debug information
+            console.log('🔧 Debug Information:');
+            console.log('1. Backend URL:', BACKEND_URL);
+            console.log('2. Frontend Origin:', window.location.origin);
+            console.log('3. Error Type:', error.name);
+            console.log('4. Error Message:', error.message);
+            console.log('💡 Solution: Visit', HEALTH_URL, 'to wake up Railway');
             
         } finally {
-            resetButton(originalText);
-        }
-        
-        function resetButton(text) {
-            contactSubmit.innerHTML = text;
+            // Reset button
+            contactSubmit.innerHTML = originalText;
             contactSubmit.disabled = false;
         }
-    });
-}
-
-// ===== Social Links Enhancement =====
-function enhanceSocialLinks() {
-    document.querySelectorAll('a[href*="github"], a[href*="linkedin"], a[href*="mailto"], a[href*="leetcode"], a[href*="hackerrank"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.href;
-            let platform = 'External Link';
-            
-            if (href.includes('github')) platform = 'GitHub';
-            else if (href.includes('linkedin')) platform = 'LinkedIn';
-            else if (href.includes('mailto')) platform = 'Email';
-            else if (href.includes('leetcode')) platform = 'LeetCode';
-            else if (href.includes('hackerrank')) platform = 'HackerRank';
-            
-            if (platform !== 'Email') {
-                showNotification(`Opening ${platform}...`, 'info', 2000);
-            }
-        });
-    });
-    
-    document.querySelectorAll('.social-icon, .social-link, .footer-social a').forEach(icon => {
-        icon.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-3px) scale(1.1)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        icon.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
     });
 }
 
@@ -375,6 +414,7 @@ function showNotification(message, type = 'info', duration = 3000) {
         animation: slideIn 0.3s ease;
         min-width: 300px;
         max-width: 400px;
+        font-family: 'Segoe UI', system-ui, sans-serif;
     `;
     
     // Close button styling
@@ -387,6 +427,8 @@ function showNotification(message, type = 'info', duration = 3000) {
         margin-left: auto;
         opacity: 0.7;
         transition: opacity 0.2s ease;
+        padding: 0;
+        font-size: 16px;
     `;
     
     closeBtn.addEventListener('mouseenter', () => {
@@ -417,13 +459,20 @@ function showNotification(message, type = 'info', duration = 3000) {
 async function checkBackendHealth() {
     try {
         const response = await fetch(HEALTH_URL, { 
-            timeout: 5000,
-            mode: 'cors'
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
         });
         
         if (response.ok) {
             const data = await response.json();
-            console.log('✅ Backend Health:', data);
+            console.log('✅ Backend Health Check:', {
+                status: 'HEALTHY',
+                message: data.message,
+                environment: data.environment,
+                uptime: data.uptime
+            });
             return true;
         }
         return false;
@@ -433,12 +482,45 @@ async function checkBackendHealth() {
     }
 }
 
+// ===== Social Links Enhancement =====
+function enhanceSocialLinks() {
+    document.querySelectorAll('a[href*="github"], a[href*="linkedin"], a[href*="mailto"], a[href*="leetcode"], a[href*="hackerrank"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.href;
+            let platform = 'External Link';
+            
+            if (href.includes('github')) platform = 'GitHub';
+            else if (href.includes('linkedin')) platform = 'LinkedIn';
+            else if (href.includes('mailto')) platform = 'Email';
+            else if (href.includes('leetcode')) platform = 'LeetCode';
+            else if (href.includes('hackerrank')) platform = 'HackerRank';
+            
+            if (platform !== 'Email') {
+                showNotification(`Opening ${platform}...`, 'info', 2000);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.social-icon, .social-link, .footer-social a').forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.1)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        icon.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
 // ===== Initialize Everything =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🏁 DOM Loaded - Initializing Portfolio...');
+    console.log('🏁 DOM Content Loaded - Initializing Portfolio...');
     
     // Start typing animation
-    typeEffect();
+    if (typingText) {
+        typeEffect();
+    }
     
     // Initialize theme
     initTheme();
@@ -450,15 +532,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize scroll effects
     window.addEventListener('scroll', checkScroll);
-    checkScroll();
+    checkScroll(); // Initial check
     
     // Resume button
     if (resumeBtn) {
         resumeBtn.addEventListener('click', (e) => {
             e.preventDefault();
             showNotification('Opening resume...', 'info', 2000);
-            // Add your resume URL here
-            window.open('https://drive.google.com/your-resume-link', '_blank');
+            // Replace with your actual resume URL
+            window.open('https://drive.google.com/file/d/your-resume-id/view?usp=sharing', '_blank');
         });
     }
     
@@ -477,13 +559,18 @@ document.addEventListener('DOMContentLoaded', function() {
         checkBackendHealth().then(isHealthy => {
             if (!isHealthy) {
                 console.warn('⚠️ Backend appears to be offline or misconfigured');
-                console.log('💡 Check:');
-                console.log('1. Visit:', HEALTH_URL);
-                console.log('2. Check Railway logs');
-                console.log('3. Verify CORS settings in server.js');
+                console.log('💡 Recommended actions:');
+                console.log('1. Visit:', HEALTH_URL, 'to wake up Railway');
+                console.log('2. Check Railway dashboard for deployment status');
+                console.log('3. Wait 30 seconds and try again');
+                
+                // Show warning to user
+                if (contactForm) {
+                    showNotification('Backend connection unstable. Messages may not be delivered.', 'warning', 5000);
+                }
             }
         });
-    }, 1000);
+    }, 2000);
     
     // Add animation styles
     const style = document.createElement('style');
@@ -522,10 +609,24 @@ document.addEventListener('DOMContentLoaded', function() {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Smooth transitions */
+        .section {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     `;
     document.head.appendChild(style);
     
     // Log final initialization
     console.log('✅ Portfolio Frontend Fully Initialized');
-    console.log('📧 Contact Form Ready - URL:', BACKEND_URL);
+    console.log('📧 Contact Form Ready');
+    console.log('🌐 Backend URL:', BACKEND_URL);
+    console.log('🎨 Theme System: Active');
+    console.log('📱 Responsive Navigation: Active');
 });
+
