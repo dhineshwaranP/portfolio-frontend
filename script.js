@@ -1,6 +1,7 @@
 // ===== BACKEND API URL =====
-// YOUR EXACT RAILWAY URL - DO NOT CHANGE THIS
-const API_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api';
+// YOUR RAILWAY BACKEND URL - UPDATED
+const BACKEND_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api/contact/send';
+const HEALTH_URL = 'https://portfolio-backened-production-3a16.up.railway.app/api/health';
 
 // ===== DOM Elements =====
 const themeSwitcher = document.getElementById('theme-switcher');
@@ -31,8 +32,7 @@ console.log('🌐 Frontend Host:', window.location.hostname);
 // Test backend connection on load
 window.addEventListener('load', async () => {
     try {
-        const healthUrl = BACKEND_URL.replace('/api/contact/send', '/api/health');
-        const response = await fetch(healthUrl, { timeout: 5000 });
+        const response = await fetch(HEALTH_URL, { timeout: 5000 });
         const data = await response.json();
         console.log('✅ Backend Connection Test:', data);
         
@@ -416,8 +416,7 @@ function showNotification(message, type = 'info', duration = 3000) {
 // ===== Backend Health Check =====
 async function checkBackendHealth() {
     try {
-        const baseUrl = BACKEND_URL.replace('/api/contact/send', '/api/health');
-        const response = await fetch(baseUrl, { 
+        const response = await fetch(HEALTH_URL, { 
             timeout: 5000,
             mode: 'cors'
         });
@@ -479,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isHealthy) {
                 console.warn('⚠️ Backend appears to be offline or misconfigured');
                 console.log('💡 Check:');
-                console.log('1. Visit:', 'https://portfolio-backened-production-26be.up.railway.app/api/health');
+                console.log('1. Visit:', HEALTH_URL);
                 console.log('2. Check Railway logs');
                 console.log('3. Verify CORS settings in server.js');
             }
@@ -530,6 +529,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Portfolio Frontend Fully Initialized');
     console.log('📧 Contact Form Ready - URL:', BACKEND_URL);
 });
-
-
-
